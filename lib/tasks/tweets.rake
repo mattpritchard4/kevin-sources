@@ -43,6 +43,7 @@ def collect_tweets(client, time_floor=Time.now - 30.minutes)
       tweets.flatten
       options[:max_id] = tweets.last.id - 1
     rescue Twitter::Error::TooManyRequests => error
+      Rails.logger.info("Hit Twitter rate limit, sleeping #{error.rate_limit.reset_in+1} seconds")
       sleep error.rate_limit.reset_in + 1
       retry
     end
