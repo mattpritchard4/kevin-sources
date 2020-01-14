@@ -35,14 +35,20 @@ end
 
 def collect_tweets(client, time_floor=Time.now - 30.minutes)
   tweets = []
+  stop_crawling = false
   # last_seen_time = Time.now
   options = {count: 200, include_rts: false}
-  until tweets.size > 1000 do # || last_seen_time < time_floor do
+  until tweets.size > 1000 || keep_crawling do # || last_seen_time < time_floor do
     begin
       new_tweets = client.home_timeline(options)
       tweets += new_tweets
       tweets.flatten!
-      options[:max_id] = new_tweets.last.id - 1
+
+      if new_tweets.empty?
+        stop_crawling = true
+      else
+        options[:max_id] = new_tweets.last.id - 1
+      end
     rescue Twitter::Error::TooManyRequests => error
       Rails.logger.info("Hit Twitter rate limit, sleeping #{error.rate_limit.reset_in+1} seconds")
       sleep error.rate_limit.reset_in + 1
