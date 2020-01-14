@@ -11,7 +11,7 @@ namespace :tweets do
 
     tweets_to_check = collect_tweets(client)
     tweets_to_check.each do |tweet|
-      if tweet.text.match(/(sources(\:| say| confirm| point to| indicate| have))/)
+      if tweet.text.match(/\b(sources(\:| say| confirm| point to| indicate| have))/)
         unless SeenTweet.where(tweet_id: tweet.id).exists?
           Rails.logger.info("I'll be retweeting this: #{tweet.id} #{tweet.text}")
           client.update("Hey look, @#{tweet.user.screen_name} is talking about me! #{tweet.uri}")
