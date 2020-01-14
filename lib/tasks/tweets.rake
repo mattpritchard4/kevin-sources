@@ -10,7 +10,7 @@ search_phrases = [
 namespace :tweets do
   desc "TODO"
   task crawl_latest: :environment do
-    Rails.logger.info("starting tweet crawl of past 10 minutes.")
+    Rails.logger.info("starting tweet crawl of past 30 minutes.")
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV.fetch("TWITTER_CONSUMER_KEY")
       config.consumer_secret     = ENV.fetch("TWITTER_CONSUMER_SECRET")
@@ -33,12 +33,14 @@ namespace :tweets do
   end
 end
 
-def collect_tweets(client, time_floor=Time.now - 10.minutes)
+def collect_tweets(client, time_floor=Time.now - 30.minutes)
   tweets = []
   last_seen_time = Time.now
+  options = {count: 200, include_rts: false}
   until tweets.size > 1000 || last_seen_time < time_floor do
-    tweets += client.home_timeline({count: 200, include_rts: false})
+    tweets += client.home_timeline(options)
     tweets.flatten
+    options[:max_id] = tweets.last.id - 1
     last_seen_time = tweets.last.created_at
   end
 
