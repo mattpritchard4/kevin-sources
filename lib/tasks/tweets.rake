@@ -10,6 +10,7 @@ search_phrases = [
 namespace :tweets do
   desc "TODO"
   task crawl_latest: :environment do
+    Rails.logger.info("starting tweet crawl of past 10 minutes.")
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV.fetch("TWITTER_CONSUMER_KEY")
       config.consumer_secret     = ENV.fetch("TWITTER_CONSUMER_SECRET")
@@ -24,6 +25,8 @@ namespace :tweets do
         tweet.retweet
       end
     end
+
+    Rails.logger.info("crawled #{tweets_to_check.count} tweets this time")
   end
 end
 
