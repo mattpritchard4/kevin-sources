@@ -20,6 +20,7 @@ namespace :tweets do
     tweets_to_check = collect_tweets(client)
     tweets_to_check.each do |tweet|
       if tweet.text.match(/(sources(\:| say| confirm| point to| indicate))/)
+        Rails.logger.info("I'll be retweeting this: #{tweet.id} #{tweet.text}")
         tweet.retweet
       end
     end
