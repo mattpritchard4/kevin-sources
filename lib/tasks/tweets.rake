@@ -19,7 +19,7 @@ namespace :tweets do
         end
       end
     end
-
+    Rails.logger.info("Last tweet processed was sent #{(Time.now - tweets_to_check.last.created_at)/60} minutes ago.")
     Rails.logger.info("crawled #{tweets_to_check.count} tweets this time")
   end
 end
