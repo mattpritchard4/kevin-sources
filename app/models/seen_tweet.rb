@@ -1,0 +1,2 @@
+class SeenTweet < ApplicationRecord
+end
