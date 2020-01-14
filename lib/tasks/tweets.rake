@@ -1,16 +1,7 @@
-search_phrases = [
-  "sources:",
-  "sources say",
-  "sources confirm",
-  "sources point to",
-  "sources indicate"
-]
-
-
 namespace :tweets do
   desc "TODO"
   task crawl_latest: :environment do
-    Rails.logger.info("starting tweet crawl of past 30 minutes.")
+    Rails.logger.info("starting tweet crawl of past 1000 tweets.")
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV.fetch("TWITTER_CONSUMER_KEY")
       config.consumer_secret     = ENV.fetch("TWITTER_CONSUMER_SECRET")
