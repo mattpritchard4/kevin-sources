@@ -35,13 +35,13 @@ end
 
 def collect_tweets(client, time_floor=Time.now - 30.minutes)
   tweets = []
-  last_seen_time = Time.now
+  # last_seen_time = Time.now
   options = {count: 200, include_rts: false}
-  until tweets.size > 1000 || last_seen_time < time_floor do
+  until tweets.size > 1000 do # || last_seen_time < time_floor do
     tweets += client.home_timeline(options)
     tweets.flatten
     options[:max_id] = tweets.last.id - 1
-    last_seen_time = tweets.last.created_at
+    # last_seen_time = tweets.last.created_at
   end
 
   tweets
