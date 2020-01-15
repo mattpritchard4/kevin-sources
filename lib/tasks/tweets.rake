@@ -31,7 +31,7 @@ def collect_tweets(client, time_floor=Time.now - 30.minutes)
   options = {count: 200, include_rts: false, tweet_mode: "extended"}
   until tweets.size > 1000 || stop_crawling do # || last_seen_time < time_floor do
     begin
-      new_tweets = client.home_timeline(options).sort_by { |x| x.id }
+      new_tweets = client.home_timeline(options)
 
       if new_tweets.empty?
         stop_crawling = true
