@@ -11,7 +11,7 @@ namespace :tweets do
 
     tweets_to_check = collect_tweets(client)
     tweets_to_check.each do |tweet|
-      if tweet.text.match(/\b(sources(\:| say| confirm| point to| indicate| have))|\b(source(\:| says| said| confirm| point| indicate| has))/)
+      if tweet.full_text.match(/\b(sources(\:| say| confirm| point to| indicate| have))|\b(source(\:| says| said| confirm| point| indicate| has))/)
         unless SeenTweet.where(tweet_id: tweet.id).exists?
           Rails.logger.info("I'll be retweeting this: #{tweet.id} #{tweet.text}")
           client.update("Hey look, @#{tweet.user.screen_name} is talking about me! #{tweet.uri}")
@@ -28,7 +28,7 @@ def collect_tweets(client, time_floor=Time.now - 30.minutes)
   tweets = []
   stop_crawling = false
   # last_seen_time = Time.now
-  options = {count: 200, include_rts: false}
+  options = {count: 200, include_rts: false, tweet_mode: "extended"}
   until tweets.size > 1000 || stop_crawling do # || last_seen_time < time_floor do
     begin
       new_tweets = client.home_timeline(options)
